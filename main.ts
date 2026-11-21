@@ -19,5 +19,13 @@ const ENTRY_TEXT =
   'settling on still water, widening, ring by ring, until the whole dark lake is ' +
   'lit — and nothing is asked of you at all.';
 
+// The gate counts Unicode code points, 1–280, and rejects whitespace-only
+// text. Check locally so a bad edit fails loudly instead of silently
+// submitting an invalid entry (verified: 196 code points, 198 bytes).
+const CODE_POINTS = [...ENTRY_TEXT].length;
+if (CODE_POINTS < 1 || CODE_POINTS > 280 || ENTRY_TEXT.trim() === '') {
+  throw new Error(`entry.txt would be ${CODE_POINTS} code points, outside the 1–280 gate`);
+}
+
 mkdirSync(OUTPUT_DIR, { recursive: true });
 writeFileSync(join(OUTPUT_DIR, 'entry.txt'), ENTRY_TEXT, 'utf8');
